@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% block title %}Departments | HRMS{% endblock %}
+{% block page_title %}Departments{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+        <p>Manage organization departments.</p>
+        {% if user.role == 'admin' %}
+        <a href="{% url 'department_create' %}" class="btn btn-primary">
+            <i class='bx bx-plus'></i> Add Department
+        </a>
+        {% endif %}
+    </div>
+
+    <div style="overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+                <tr style="text-align: left; background: var(--light); color: var(--dark-alt);">
+                    <th style="padding: 1rem; border-radius: 8px 0 0 8px;">Name</th>
+                    <th style="padding: 1rem;">Description</th>
+                    <th style="padding: 1rem;">Manager</th>
+                    <th style="padding: 1rem; border-radius: 0 8px 8px 0;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for dept in departments %}
+                <tr style="border-bottom: 1px solid #eee; transition: background 0.2s;">
+                    <td style="padding: 1rem; font-weight: 500;">{{ dept.name }}</td>
+                    <td style="padding: 1rem; color: var(--gray);">{{ dept.description|truncatewords:10 }}</td>
+                    <td style="padding: 1rem;">
+                        {% if dept.manager %}
+                            <span style="display: inline-flex; align-items: center; gap: 0.5rem; background: var(--primary-light); color: var(--primary); padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.85rem;">
+                                <i class='bx bx-user'></i> {{ dept.manager.username }}
+                            </span>
+                        {% else %}
+                            <span style="color: var(--gray);">-</span>
+                        {% endif %}
+                    </td>
+                    <td style="padding: 1rem;">
+                        {% if user.role == 'admin' %}
+                        <div style="display: flex; gap: 0.5rem;">
+                            <a href="{% url 'department_update' dept.pk %}" class="btn btn-outline" style="padding: 0.4rem 0.8rem; font-size: 0.9rem;">Edit</a>
+                            <a href="{% url 'department_delete' dept.pk %}" class="btn btn-danger" style="padding: 0.4rem 0.8rem; font-size: 0.9rem;" onclick="return confirm('Are you sure?')">Delete</a>
+                        </div>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4" style="text-align: center; padding: 2rem; color: var(--gray);">No departments found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

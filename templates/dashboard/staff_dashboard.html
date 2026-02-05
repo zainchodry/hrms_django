@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block title %}My Dashboard | HRMS{% endblock %}
+{% block page_title %}Welcome Back, {{ user.first_name|default:user.username }}!{% endblock %}
+
+{% block content %}
+<div class="dashboard-grid">
+    <div class="card stat-card">
+        <div class="stat-content">
+            <h3>22</h3>
+            <p>Available Leave Days</p>
+        </div>
+        <div class="stat-icon bg-success-light">
+            <i class='bx bxs-plane-alt'></i>
+        </div>
+    </div>
+    
+    <div class="card stat-card">
+        <div class="stat-content">
+            <h3>Present</h3>
+            <p>Today's Status</p>
+        </div>
+        <div class="stat-icon bg-primary-light">
+            <i class='bx bxs-user-check'></i>
+        </div>
+    </div>
+    
+    <div class="card stat-card">
+        <div class="stat-content">
+            <h3>0</h3>
+            <p>Pending Tasks</p>
+        </div>
+        <div class="stat-icon bg-info-light">
+            <i class='bx bxs-task'></i>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <h3>Announcements</h3>
+    <div style="background: var(--light); padding: 1rem; border-radius: 8px; margin-top: 1rem;">
+        <strong>Holiday Notice</strong>
+        <p>Office will be closed on Friday for maintenance.</p>
+    </div>
+</div>
+{% endblock %}

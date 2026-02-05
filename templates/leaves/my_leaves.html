@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block title %}My Leaves | HRMS{% endblock %}
+{% block page_title %}Leave History{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+        <p>Track your leave applications.</p>
+        <a href="{% url 'apply_leave' %}" class="btn btn-primary">
+            <i class='bx bx-plus'></i> Apply Leave
+        </a>
+    </div>
+
+    <div style="overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+                <tr style="text-align: left; background: var(--light);">
+                    <th style="padding: 1rem;">Type</th>
+                    <th style="padding: 1rem;">From - To</th>
+                    <th style="padding: 1rem;">Reason</th>
+                    <th style="padding: 1rem;">Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for leave in leaves %}
+                <tr style="border-bottom: 1px solid #eee;">
+                    <td style="padding: 1rem;">{{ leave.leave_type|title }}</td>
+                    <td style="padding: 1rem;">
+                        {{ leave.start_date }} <span style="color:var(--gray)">to</span> {{ leave.end_date }}
+                    </td>
+                    <td style="padding: 1rem; color: var(--gray);">{{ leave.reason|truncatewords:5 }}</td>
+                    <td style="padding: 1rem;">
+                        {% if leave.status == 'approved' %}
+                            <span class="badge bg-success-light" style="padding: 4px 8px; border-radius: 4px;">Approved</span>
+                        {% elif leave.status == 'rejected' %}
+                            <span class="badge bg-warning-light" style="padding: 4px 8px; border-radius: 4px; color: var(--danger);">Rejected</span>
+                        {% else %}
+                            <span class="badge bg-info-light" style="padding: 4px 8px; border-radius: 4px;">Pending</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4" style="text-align: center; padding: 2rem; color: var(--gray);">No leave history found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

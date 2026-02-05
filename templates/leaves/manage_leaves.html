@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% block title %}Manage Leaves | HRMS{% endblock %}
+{% block page_title %}Leave Requests{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div style="overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+                <tr style="text-align: left; background: var(--light);">
+                    <th style="padding: 1rem;">Employee</th>
+                    <th style="padding: 1rem;">Type & Dates</th>
+                    <th style="padding: 1rem;">Reason</th>
+                    <th style="padding: 1rem;">Status</th>
+                    <th style="padding: 1rem;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for leave in leaves %}
+                <tr style="border-bottom: 1px solid #eee;">
+                    <td style="padding: 1rem; font-weight: 500;">
+                        {{ leave.employee.user.username }}
+                    </td>
+                    <td style="padding: 1rem;">
+                        <div>{{ leave.leave_type|title }}</div>
+                        <small style="color: var(--gray);">{{ leave.start_date }} - {{ leave.end_date }}</small>
+                    </td>
+                    <td style="padding: 1rem; color: var(--gray);">{{ leave.reason }}</td>
+                    <td style="padding: 1rem;">
+                        <span style="font-weight: 600; 
+                            color: {% if leave.status == 'approved' %}var(--success)
+                                   {% elif leave.status == 'rejected' %}var(--danger)
+                                   {% else %}var(--info){% endif %};">
+                            {{ leave.status|title }}
+                        </span>
+                    </td>
+                    <td style="padding: 1rem;">
+                        {% if leave.status == 'pending' %}
+                        <div style="display: flex; gap: 0.5rem;">
+                            <a href="{% url 'approve_leave' leave.pk %}" class="btn btn-primary" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;">Approve</a>
+                            <a href="{% url 'reject_leave' leave.pk %}" class="btn btn-danger" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;">Reject</a>
+                        </div>
+                        {% else %}
+                        <span style="color: var(--gray);">No actions</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" style="text-align: center; padding: 2rem; color: var(--gray);">No pending requests.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

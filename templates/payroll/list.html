@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block title %}Payroll | HRMS{% endblock %}
+{% block page_title %}Payroll History{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+        <p>View salary slips and payment history.</p>
+        {% if user.role == 'admin' %}
+        <a href="{% url 'generate_payroll' %}" class="btn btn-dark-alt" style="background: var(--dark); color: white;">
+            <i class='bx bxs-magic-wand'></i> Run Payroll
+        </a>
+        {% endif %}
+    </div>
+
+    <div style="overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+                <tr style="text-align: left; background: var(--light);">
+                    {% if user.role == 'admin' %}<th style="padding: 1rem;">Employee</th>{% endif %}
+                    <th style="padding: 1rem;">Month</th>
+                    <th style="padding: 1rem;">Basic Salary</th>
+                    <th style="padding: 1rem;">Deductions</th>
+                    <th style="padding: 1rem;">Net Pay</th>
+                    <th style="padding: 1rem;">Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for slip in payrolls %}
+                <tr style="border-bottom: 1px solid #eee;">
+                    {% if user.role == 'admin' %}
+                    <td style="padding: 1rem; font-weight: 500;">{{ slip.employee.user.username }}</td>
+                    {% endif %}
+                    <td style="padding: 1rem;">{{ slip.month }}</td>
+                    <td style="padding: 1rem;">${{ slip.basic_salary }}</td>
+                    <td style="padding: 1rem; color: var(--danger);">-${{ slip.deductions }}</td>
+                    <td style="padding: 1rem; font-weight: 700; color: var(--success);">${{ slip.net_salary }}</td>
+                    <td style="padding: 1rem;">
+                        <span class="badge bg-success-light" style="padding: 4px 8px; border-radius: 4px;">Paid</span>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" style="text-align: center; padding: 2rem; color: var(--gray);">No payroll records found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

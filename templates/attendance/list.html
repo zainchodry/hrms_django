@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% block title %}My Attendance | HRMS{% endblock %}
+{% block page_title %}Attendance Record{% endblock %}
+
+{% block content %}
+<div class="card" style="margin-bottom: 2rem;">
+    <h3>Today's Action</h3>
+    <div style="display: flex; gap: 1rem; margin-top: 1rem; align-items: center;">
+        {% if not today_record or not today_record.check_in %}
+            <a href="{% url 'check_in' %}" class="btn btn-primary">
+                <i class='bx bxs-watch'></i> Check In
+            </a>
+            <span style="color: var(--gray);">You haven't checked in today.</span>
+        {% elif not today_record.check_out %}
+            <a href="{% url 'check_out' %}" class="btn btn-danger">
+                <i class='bx bxs-watch'></i> Check Out
+            </a>
+            <span style="color: var(--primary);">Checked in at {{ today_record.check_in|date:"H:i" }}</span>
+        {% else %}
+            <button class="btn btn-outline" disabled>Day Completed</button>
+            <span style="color: var(--success);">
+                <i class='bx bxs-check-circle'></i> Completed ({{ today_record.check_in|date:"H:i" }} - {{ today_record.check_out|date:"H:i" }})
+            </span>
+        {% endif %}
+    </div>
+</div>
+
+<div class="card">
+    <h3>History</h3>
+    <div style="overflow-x: auto; margin-top: 1rem;">
+        <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+                <tr style="text-align: left; background: var(--light);">
+                    <th style="padding: 1rem;">Date</th>
+                    <th style="padding: 1rem;">Check In</th>
+                    <th style="padding: 1rem;">Check Out</th>
+                    <th style="padding: 1rem;">Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for att in records %}
+                <tr style="border-bottom: 1px solid #eee;">
+                    <td style="padding: 1rem;">{{ att.date }}</td>
+                    <td style="padding: 1rem;">{{ att.check_in|default:"-" }}</td>
+                    <td style="padding: 1rem;">{{ att.check_out|default:"-" }}</td>
+                    <td style="padding: 1rem;">
+                        {% if att.is_late %}
+                            <span style="color: var(--danger); font-weight: 600;">Late</span>
+                        {% else %}
+                            <span style="color: var(--success);">On Time</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4" style="text-align: center; padding: 2rem; color: var(--gray);">No records found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

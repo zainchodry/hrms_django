@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% block title %}Employees | HRMS{% endblock %}
+{% block page_title %}Employees{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+        <p>Manage workforce directory.</p>
+        {% if user.role == 'admin' or user.role == 'manager' %}
+        <a href="{% url 'employee_create' %}" class="btn btn-primary">
+            <i class='bx bx-user-plus'></i> Add Employee
+        </a>
+        {% endif %}
+    </div>
+
+    <div style="overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+                <tr style="text-align: left; background: var(--light); color: var(--dark-alt);">
+                    <th style="padding: 1rem; border-radius: 8px 0 0 8px;">Employee</th>
+                    <th style="padding: 1rem;">Role</th>
+                    <th style="padding: 1rem;">Department</th>
+                    <th style="padding: 1rem;">Phone</th>
+                    <th style="padding: 1rem; border-radius: 0 8px 8px 0;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for emp in employees %}
+                <tr style="border-bottom: 1px solid #eee; transition: background 0.2s;">
+                    <td style="padding: 1rem;">
+                        <div style="display: flex; align-items: center; gap: 0.75rem;">
+                            <div style="width: 32px; height: 32px; background: var(--primary-light); color: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600;">
+                                {{ emp.user.username|make_list|first|upper }}
+                            </div>
+                            <div>
+                                <span style="display: block; font-weight: 500;">{{ emp.user.driver_name|default:emp.user.username }}</span>
+                                <small style="color: var(--gray);">{{ emp.designation }}</small>
+                            </div>
+                        </div>
+                    </td>
+                    <td style="padding: 1rem;">
+                        <span style="text-transform: capitalize; background: var(--info-light); color: var(--info); padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.8rem;">
+                            {{ emp.user.role }}
+                        </span>
+                    </td>
+                    <td style="padding: 1rem;">{{ emp.department.name|default:"-" }}</td>
+                    <td style="padding: 1rem;">{{ emp.phone|default:"-" }}</td>
+                    <td style="padding: 1rem;">
+                        <div style="display: flex; gap: 0.5rem;">
+                            <a href="{% url 'employee_update' emp.pk %}" class="btn btn-outline" style="padding: 0.4rem 0.8rem; font-size: 0.9rem;">Edit</a>
+                            {% if user.role == 'admin' %}
+                            <a href="{% url 'employee_delete' emp.pk %}" class="btn btn-danger" style="padding: 0.4rem 0.8rem; font-size: 0.9rem;" onclick="return confirm('Are you sure?')">Delete</a>
+                            {% endif %}
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" style="text-align: center; padding: 2rem; color: var(--gray);">No employees found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

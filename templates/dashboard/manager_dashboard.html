@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block title %}Manager Dashboard | HRMS{% endblock %}
+{% block page_title %}Manager Overview{% endblock %}
+
+{% block content %}
+<div class="dashboard-grid">
+    <div class="card stat-card">
+        <div class="stat-content">
+            <h3>18</h3>
+            <p>Team Members</p>
+        </div>
+        <div class="stat-icon bg-primary-light">
+            <i class='bx bxs-group'></i>
+        </div>
+    </div>
+    
+    <div class="card stat-card">
+        <div class="stat-content">
+            <h3>3</h3>
+            <p>Pending Approvals</p>
+        </div>
+        <div class="stat-icon bg-warning-light">
+            <i class='bx bxs-message-square-check'></i>
+        </div>
+    </div>
+    
+    <div class="card stat-card">
+        <div class="stat-content">
+            <h3>95%</h3>
+            <p>Attendance (Today)</p>
+        </div>
+        <div class="stat-icon bg-success-light">
+            <i class='bx bxs-calendar-check'></i>
+        </div>
+    </div>
+</div>
+
+<div class="dashboard-grid">
+    <div class="card" style="grid-column: span 2;">
+        <h3>Team Leave Requests</h3>
+        <p style="color: var(--gray); margin-top: 1rem;">No pending requests found.</p>
+    </div>
+    <div class="card">
+        <h3>Quick Actions</h3>
+        <div style="display: flex; flex-direction: column; gap: 0.5rem; margin-top: 1rem;">
+            <button class="btn btn-outline">Approve Timesheets</button>
+            <button class="btn btn-outline">Schedule Meeting</button>
+        </div>
+    </div>
+</div>
+{% endblock %}

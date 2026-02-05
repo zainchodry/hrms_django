@@ -1,0 +1,60 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | HRMS</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- CSS -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body class="login-body">
+
+    <div class="alert-container">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    <div class="alert-content">
+                        {{ message }}
+                    </div>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    <div class="login-card">
+        <div class="login-header">
+            <h1>HRMS Login</h1>
+            <p style="color: var(--gray);">Please sign in to continue</p>
+        </div>
+
+        <form method="POST">
+            {% csrf_token %}
+            
+            {% if form.non_field_errors %}
+                <div style="color: var(--danger); font-size: 0.9rem; margin-bottom: 1rem; text-align: center;">
+                    {{ form.non_field_errors.0 }}
+                </div>
+            {% endif %}
+
+            <div class="form-group">
+                <label for="id_username" class="form-label">Username</label>
+                <input type="text" name="username" class="form-control" placeholder="Enter your username" required id="id_username">
+            </div>
+
+            <div class="form-group">
+                <label for="id_password" class="form-label">Password</label>
+                <input type="password" name="password" class="form-control" placeholder="Enter your password" required id="id_password">
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">
+                Sign In
+            </button>
+            <p style="text-align: center; margin-top: 15px;">Dont have an account? <a href="{% url 'register' %}">Register</a></p>
+        </form>
+    </div>
+
+</body>
+</html>

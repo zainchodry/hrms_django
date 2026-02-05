@@ -1,0 +1,153 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}HRMS Portal{% endblock %}</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Remocix Icons (using Boxicons for example) -->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+
+    <div class="alert-container">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    <div class="alert-content">
+                        {{ message }}
+                    </div>
+                    <button type="button" class="close-btn" onclick="this.parentElement.remove()">&times;</button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    <div class="layout-wrapper">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <a href="#" class="brand-logo">
+                    <i class='bx bxs-component'></i>
+                    HRMS Core
+                </a>
+            </div>
+
+            <div class="sidebar-menu">
+                {% if user.is_authenticated %}
+                    
+                    <!-- ADMIN NAVIGATION -->
+                    {% if user.role == 'admin' %}
+                        <div class="menu-label" style="padding: 0 1rem; margin-top: 1rem; font-size: 0.75rem; color: var(--gray); font-weight: 600; text-transform: uppercase;">Admin Controls</div>
+                        
+                        <a href="{% url 'admin_dashboard' %}" class="menu-item {% if request.resolver_match.url_name == 'admin_dashboard' %}active{% endif %}">
+                            <i class='bx bxs-dashboard'></i> Dashboard
+                        </a>
+                        <a href="{% url 'department_list' %}" class="menu-item {% if 'department' in request.resolver_match.url_name %}active{% endif %}">
+                            <i class='bx bxs-buildings'></i> Departments
+                        </a>
+                        <a href="{% url 'employee_list' %}" class="menu-item {% if 'employee' in request.resolver_match.url_name %}active{% endif %}">
+                            <i class='bx bxs-user-detail'></i> Employees
+                        </a>
+                        <a href="{% url 'payroll_list' %}" class="menu-item {% if 'payroll' in request.resolver_match.url_name %}active{% endif %}">
+                            <i class='bx bxs-wallet'></i> Payroll
+                        </a>
+                        <a href="{% url 'manage_leaves' %}" class="menu-item {% if 'manage_leaves' in request.resolver_match.url_name %}active{% endif %}">
+                            <i class='bx bxs-calendar-check'></i> Manage Leaves
+                        </a>
+
+                    <!-- MANAGER NAVIGATION -->
+                    {% elif user.role == 'manager' %}
+                        <div class="menu-label" style="padding: 0 1rem; margin-top: 1rem; font-size: 0.75rem; color: var(--gray); font-weight: 600; text-transform: uppercase;">Team Management</div>
+
+                        <a href="{% url 'manager_dashboard' %}" class="menu-item {% if request.resolver_match.url_name == 'manager_dashboard' %}active{% endif %}">
+                            <i class='bx bxs-dashboard'></i> Dashboard
+                        </a>
+                        <a href="{% url 'employee_list' %}" class="menu-item {% if 'employee' in request.resolver_match.url_name %}active{% endif %}">
+                            <i class='bx bxs-group'></i> My Team
+                        </a>
+                        <a href="{% url 'manage_leaves' %}" class="menu-item {% if 'manage_leaves' in request.resolver_match.url_name %}active{% endif %}">
+                            <i class='bx bxs-check-square'></i> Approve Leaves
+                        </a>
+                        <a href="{% url 'department_list' %}" class="menu-item {% if 'department' in request.resolver_match.url_name %}active{% endif %}">
+                            <i class='bx bxs-buildings'></i> My Department
+                        </a>
+
+                    <!-- STAFF NAVIGATION -->
+                    {% elif user.role == 'staff' %}
+                        <div class="menu-label" style="padding: 0 1rem; margin-top: 1rem; font-size: 0.75rem; color: var(--gray); font-weight: 600; text-transform: uppercase;">My Access</div>
+
+                        <a href="{% url 'staff_dashboard' %}" class="menu-item {% if request.resolver_match.url_name == 'staff_dashboard' %}active{% endif %}">
+                            <i class='bx bxs-dashboard'></i> Dashboard
+                        </a>
+                        <a href="{% url 'my_attendance' %}" class="menu-item {% if 'attendance' in request.resolver_match.url_name %}active{% endif %}">
+                            <i class='bx bxs-time'></i> Attendance
+                        </a>
+                        <a href="{% url 'my_leaves' %}" class="menu-item {% if 'my_leaves' in request.resolver_match.url_name %}active{% endif %}">
+                            <i class='bx bxs-plane-alt'></i> Apply Leave
+                        </a>
+                        <a href="{% url 'payroll_list' %}" class="menu-item {% if 'payroll' in request.resolver_match.url_name %}active{% endif %}">
+                            <i class='bx bxs-file-doc'></i> Payslips
+                        </a>
+                    {% endif %}
+
+                    <!-- COMMON LINKS -->
+                    <div style="margin-top: auto;"></div>
+                    <div style="border-top: 1px solid rgba(0,0,0,0.05); margin: 0.5rem 1rem;"></div>
+                    
+                    <a href="{% url 'profile' %}" class="menu-item {% if request.resolver_match.url_name == 'profile' %}active{% endif %}">
+                        <i class='bx bxs-user-circle'></i> My Profile
+                    </a>
+                {% endif %}
+            </div>
+
+            {% if user.is_authenticated %}
+            <div class="user-profile">
+                <div class="user-avatar">
+                    {{ user.username|make_list|first|upper }}
+                </div>
+                <div class="user-info">
+                    <strong>{{ user.username|truncatechars:15 }}</strong>
+                    <small>{{ user.role|title }}</small>
+                </div>
+                <a href="{% url 'logout' %}" style="margin-left: auto; color: var(--danger);" title="Logout">
+                    <i class='bx bx-log-out'></i>
+                </a>
+            </div>
+            {% endif %}
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="top-bar">
+                <h2>{% block page_title %}Dashboard{% endblock %}</h2>
+                <!-- Additional header items -->
+                <div style="display: flex; gap: 1rem; align-items: center;">
+                    <span style="font-size: 0.9rem; color: var(--gray);">{{ now|date:"l, d F Y" }}</span>
+                </div>
+            </header>
+
+            <div class="content-body">
+                {% block content %}
+                <!-- Child content goes here -->
+                {% endblock %}
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Auto-dismiss messages after 5 seconds
+        setTimeout(() => {
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(alert => {
+                alert.style.opacity = '0';
+                setTimeout(() => alert.remove(), 300);
+            });
+        }, 5000);
+    </script>
+</body>
+</html>

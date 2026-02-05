@@ -1,0 +1,57 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register | HRMS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body class="login-body">
+
+    <div class="alert-container">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    <div class="login-card" style="max-width: 500px;">
+        <div class="login-header">
+            <h1>Create Account</h1>
+            <p style="color: var(--gray);">Join the HRMS platform</p>
+        </div>
+
+        <form method="POST">
+            {% csrf_token %}
+            
+            {% for field in form %}
+            <div class="form-group">
+                <label class="form-label">{{ field.label }}</label>
+                {{ field }}
+                {% if field.help_text %}
+                <small style="color: var(--gray); display: block; font-size: 0.8rem;">{{ field.help_text }}</small>
+                {% endif %}
+                {% if field.errors %}
+                <div style="color: var(--danger); font-size: 0.85rem;">{{ field.errors }}</div>
+                {% endif %}
+            </div>
+            {% endfor %}
+
+            <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">
+                Register
+            </button>
+            <p style="text-align: center; margin-top: 15px;">Already have an account? <a href="{% url 'login' %}">Login</a></p>
+        </form>
+    </div>
+
+    <script>
+        document.querySelectorAll('input').forEach(el => el.classList.add('form-control'));
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block title %}Generate Payroll | HRMS{% endblock %}
+{% block page_title %}Run Payroll{% endblock %}
+
+{% block content %}
+<div class="card" style="max-width: 500px; margin: 0 auto;">
+    <p style="margin-bottom: 2rem; color: var(--gray);">
+        This will calculate and generate payroll slips for all active employees for the selected month.
+    </p>
+
+    <form method="POST">
+        {% csrf_token %}
+        <div class="form-group">
+            <label class="form-label">Select Month</label>
+            <input type="month" name="month" class="form-control" required>
+        </div>
+
+        <div style="margin-top: 2rem;">
+            <button type="submit" class="btn btn-primary" style="width: 100%;">
+                <i class='bx bxs-calculator'></i> Generate Slips
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}

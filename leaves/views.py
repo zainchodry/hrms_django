@@ -10,8 +10,8 @@ def is_manager(user):
 @login_required
 def my_leaves(request):
     emp = Employee.objects.get(user=request.user)
-    leaves = Leave.objects.filter(employee=emp)
-    return render(request, 'my_leaves.html', {'leaves': leaves})
+    leaves = Leave.objects.filter(employee=emp).order_by('-start_date')
+    return render(request, 'leaves/my_leaves.html', {'leaves': leaves})
 
 @login_required
 def apply_leave(request):
@@ -22,14 +22,19 @@ def apply_leave(request):
         leave.employee = emp
         leave.save()
         return redirect('my_leaves')
-    return render(request, 'leaves_form.html', {'form': form})
+    return render(request, 'leaves/form.html', {'form': form, 'title': 'Apply for Leave'})
 
 @login_required
 def manage_leaves(request):
-    if not is_manager(request.user):
+    if not (request.user.role == 'manager' or request.user.role == 'admin'):
         return redirect('my_leaves')
-    leaves = Leave.objects.filter(employee__department__manager=request.user)
-    return render(request, 'manage_leaves.html', {'leaves': leaves})
+    
+    if request.user.role == 'manager':
+        leaves = Leave.objects.filter(employee__department__manager=request.user).order_by('-created_at')
+    else:
+        leaves = Leave.objects.all().order_by('-created_at')
+
+    return render(request, 'leaves/manage_leaves.html', {'leaves': leaves})
 
 @login_required
 def approve_leave(request, pk):

@@ -7,8 +7,10 @@ from employees.models import Employee
 @login_required
 def my_attendance(request):
     emp = Employee.objects.get(user=request.user)
-    records = Attendance.objects.filter(employee=emp)
-    return render(request, 'my.html', {'records': records})
+    records = Attendance.objects.filter(employee=emp).order_by('-date')
+    today = timezone.now().date()
+    today_record = Attendance.objects.filter(employee=emp, date=today).first()
+    return render(request, 'attendance/list.html', {'records': records, 'today_record': today_record})
 
 @login_required
 def check_in(request):

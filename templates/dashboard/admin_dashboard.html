@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% block title %}Admin Dashboard | HRMS{% endblock %}
+{% block page_title %}Admin Control Center{% endblock %}
+
+{% block content %}
+<div class="dashboard-grid">
+    <div class="card stat-card">
+        <div class="stat-content">
+            <h3>124</h3>
+            <p>Total Employees</p>
+        </div>
+        <div class="stat-icon bg-primary-light">
+            <i class='bx bxs-user-account'></i>
+        </div>
+    </div>
+    
+    <div class="card stat-card">
+        <div class="stat-content">
+            <h3>12</h3>
+            <p>New Hires (Month)</p>
+        </div>
+        <div class="stat-icon bg-success-light">
+            <i class='bx bxs-user-plus'></i>
+        </div>
+    </div>
+    
+    <div class="card stat-card">
+        <div class="stat-content">
+            <h3>5</h3>
+            <p>Pending Leaves</p>
+        </div>
+        <div class="stat-icon bg-warning-light">
+            <i class='bx bxs-time-five'></i>
+        </div>
+    </div>
+    
+    <div class="card stat-card">
+        <div class="stat-content">
+            <h3>8</h3>
+            <p>Departments</p>
+        </div>
+        <div class="stat-icon bg-info-light">
+            <i class='bx bxs-buildings'></i>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+        <h3>Recent Activity</h3>
+        <button class="btn btn-primary btn-sm">View All</button>
+    </div>
+    <div style="color: var(--gray);">
+        <p>No recent activity to show.</p>
+    </div>
+</div>
+{% endblock %}

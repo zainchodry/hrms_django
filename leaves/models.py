@@ -14,6 +14,6 @@ class Leave(models.Model):
     reason = models.TextField()
     status = models.CharField(max_length=10, choices=STATUS, default='pending')
     applied_on = models.DateTimeField(auto_now_add=True)
-
+    created_at = models.DateTimeField(auto_now_add=True)
     def __str__(self):
         return f"{self.employee} - {self.status}"

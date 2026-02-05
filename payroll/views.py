@@ -27,14 +27,14 @@ def generate_payroll(request):
             )
         return redirect('payroll_list')
 
-    return render(request, 'payroll_generate.html')
+    return render(request, 'payroll/generate.html')
 
 @login_required
 def payroll_list(request):
     if request.user.role == 'admin':
-        payrolls = Payroll.objects.all()
+        payrolls = Payroll.objects.all().order_by('-created_at')
     else:
         emp = Employee.objects.get(user=request.user)
-        payrolls = Payroll.objects.filter(employee=emp)
+        payrolls = Payroll.objects.filter(employee=emp).order_by('-created_at')
 
     return render(request, 'payroll/list.html', {'payrolls': payrolls})

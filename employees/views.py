@@ -18,30 +18,30 @@ def employee_list(request):
     else:
         employees = Employee.objects.filter(user=request.user)
 
-    return render(request, 'list.html', {'employees': employees})
+    return render(request, 'employees/list.html', {'employees': employees})
 
 @login_required
 def employee_create(request):
-    if not is_admin(request.user):
+    if not (is_admin(request.user) or is_manager(request.user)):
         return redirect('employee_list')
 
     form = EmployeeForm(request.POST or None)
     if form.is_valid():
         form.save()
         return redirect('employee_list')
-    return render(request, 'employees_form.html', {'form': form})
+    return render(request, 'employees/form.html', {'form': form, 'title': 'Add Employee'})
 
 @login_required
 def employee_update(request, pk):
     emp = get_object_or_404(Employee, pk=pk)
-    if request.user != emp.user and not is_admin(request.user):
+    if request.user != emp.user and not (is_admin(request.user) or is_manager(request.user)):
         return redirect('employee_list')
 
     form = EmployeeForm(request.POST or None, instance=emp)
     if form.is_valid():
         form.save()
         return redirect('employee_list')
-    return render(request, 'employees_form.html', {'form': form})
+    return render(request, 'employees/form.html', {'form': form, 'title': 'Edit Employee'})
 
 @login_required
 def employee_delete(request, pk):

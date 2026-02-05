@@ -1,25 +1,34 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from employees.models import Employee
-from departments.models import Department
-from attendance.models import Attendance
-from leaves.models import Leave
-from payroll.models import Payroll
-from django.utils import timezone
+from django.contrib import messages
 
 @login_required
 def admin_dashboard(request):
     if request.user.role != 'admin':
-        return render(request, 'dashboard_denied.html')
+        messages.error(request, "Access denied. Admin rights required.")
+        return redirect_to_role_dashboard(request.user)
+    return render(request, 'dashboard/admin_dashboard.html')
 
-    today = timezone.now().date()
+@login_required
+def manager_dashboard(request):
+    if request.user.role != 'manager':
+        messages.error(request, "Access denied. Manager rights required.")
+        return redirect_to_role_dashboard(request.user)
+    return render(request, 'dashboard/manager_dashboard.html')
 
-    context = {
-        "total_employees": Employee.objects.count(),
-        "total_departments": Department.objects.count(),
-        "today_attendance": Attendance.objects.filter(date=today).count(),
-        "pending_leaves": Leave.objects.filter(status='pending').count(),
-        "total_payroll": Payroll.objects.count(),
-    }
+@login_required
+def staff_dashboard(request):
+    if request.user.role != 'staff':
+        messages.error(request, "Access denied. Staff rights required.")
+        return redirect_to_role_dashboard(request.user)
+    return render(request, 'dashboard/staff_dashboard.html')
 
-    return render(request, 'admin_dashboard.html', context)
+def redirect_to_role_dashboard(user):
+    """Helper to redirect user to their correct dashboard."""
+    if user.role == 'admin':
+        return redirect('admin_dashboard')
+    elif user.role == 'manager':
+        return redirect('manager_dashboard')
+    elif user.role == 'staff':
+        return redirect('staff_dashboard')
+    return redirect('profile')
